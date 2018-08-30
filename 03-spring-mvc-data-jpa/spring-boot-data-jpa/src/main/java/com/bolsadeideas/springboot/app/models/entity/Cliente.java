@@ -12,6 +12,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "clientes")
@@ -22,21 +27,36 @@ public class Cliente implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	//Los String deben ser validado con @NotEmpty
+	@NotEmpty
 	private String nombre;
+	
+	@NotEmpty
 	private String apellido;
+	
+	@NotEmpty
+	@Email
 	private String email;
 	
+	//Spring-boot utiliza el formato de fecha segun nuestra configuracion ejm: MM/DD/YYYY
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@NotNull
 	private Date createdAt;
 	
 	public Cliente() {}
 	
-	@PrePersist // invocamos este metodo antes de producirse la persistencia del cliente en la BD
+	/**
+	 * Este metodo se invoca automaticamente antes de producirse la persistencia del cliente en la BD
+	 
+	@PrePersist
 	public void prePersist()
 	{
 		createdAt = new Date();
 	}
+	*/
 
 	public Long getId() {
 		return id;

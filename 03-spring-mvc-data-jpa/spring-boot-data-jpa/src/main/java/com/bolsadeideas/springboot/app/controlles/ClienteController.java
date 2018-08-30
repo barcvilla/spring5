@@ -2,10 +2,13 @@ package com.bolsadeideas.springboot.app.controlles;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -48,10 +51,18 @@ public class ClienteController {
 	
 	/**
 	 * Metodo que recibe los datos desde el formulario cliente enviado por el usuario
+	 * @Valid activa la validacion al objeto mapeado en el form que es el Cliente
+	 * BindingResult valida el resultado
 	 */
 	@RequestMapping(value="/form", method = RequestMethod.POST)
-	public String guardar(Cliente cliente)
+	public String guardar(@Valid Cliente cliente, BindingResult result, Model model)
 	{
+		if(result.hasErrors())
+		{
+			model.addAttribute("titulo", "Formulario de Cliente");
+			// si contiene errores retornamos al formulario form
+			return "form";
+		}
 		//llamamos a nuestros clase dao
 		clienteDao.save(cliente);
 		return "redirect:/listar";

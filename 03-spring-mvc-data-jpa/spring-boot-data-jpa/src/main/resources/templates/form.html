@@ -18,42 +18,60 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
 				<li class="nav-item"><a class="nav-link" href="#about"
-					th:href="@{/listar}">Cliente</a></li>
+					th:href="@{/listar}">Nuestros Cliente</a></li>
 			</ul>
 		</div>
 	</nav>
 
 	<div class="container">
-		<h1	class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
-			th:text="${titulo}"></h1>
+		<h1	class="text-secondary border border-success border-top-0 border-left-0 border-right-0" th:text="${titulo}"></h1>
+		<!-- Creamos una lista que contenga todos los errores -->
+		<div th:object="${cliente}" th:remove="tag">
+			<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+				<li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+			</ul>
+		</div>
+		
 		<!-- Thymeliaf utiliza dos propiedades cuando se trabajan con formularios
 	     action: contiene la url hacia la ruta que procesa al formulario que son request de tipo POST. El simbolo @
 	     se utiliza para indicar url  
 	     object: mapea el objeto (entidad) con los campos del formulario-->
 		<form th:action="@{/form}" th:object="${cliente}" method="post">
 			
-			<div class="form-group-row">
+			<div class="form-group row">
 				<label for="nombre" class="col-sm-2 col-form=label" >Nombre</label>
 				<div class="col-sm-6">
-					<input type="text" th:field="*{nombre}" class="form-control" />
+					<input type="text" th:field="*{nombre}" class="form-control" th:errorclass="'form-control alert-danger'" />
+					<!-- Validamos si el campo nombre contiene errores -->
+					<small class="form-text text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" ></small>
 				</div>
 			</div>
 			
-			<div class="form-group-row">
+			<div class="form-group row">
 				<label for="apellido" class="col-sm-2 col-form=label" >Apellido</label>
 				<div class="col-sm-6">
-					<input type="text" th:field="*{apellido}" class="form-control" />
+					<input type="text" th:field="*{apellido}" class="form-control" th:errorclass="'form-control alert-danger'" />
+					<small class="form-text text-danger" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}" ></small>
 				</div>
 			</div>
 			
-			<div class="form-group-row">
+			<div class="form-group row">
 				<label for="email" class="col-sm-2 col-form=label">Email</label>
 				<div class="col-sm-6">
-					<input type="text" th:field="*{email}" class="form-control" />
+					<input type="text" th:field="*{email}" class="form-control" th:errorclass="'form-control alert-danger'" />
+					<small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" ></small>
 				</div>
 			</div>
 			
-			<div class="form-group-row">
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">Fecha</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" th:field="*{createdAt}" th:errorclass="'form-control alert-danger'" />
+					<small class="form-text text-danger" th:if="${#fields.hasErrors('createdAt')}" th:errors="*{createdAt}" ></small>
+				</div>
+			</div>
+			
+			<div class="form-group row">
 				<div class="col-sm-6">
 					<input type="submit" value="Crear Cliente" class="btn btn-primary" />
 				</div>
