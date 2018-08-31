@@ -25,7 +25,7 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	public List<Cliente> findAll() {
 		
-		return clienteDao.findAll();
+		return (List<Cliente>) clienteDao.findAll();
 	}
 
 	@Transactional
