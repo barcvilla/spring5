@@ -4,21 +4,18 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.bolsadeideas.springboot.app.models.entity.Cliente;
 
 //marcamos la clase como componente de persistencia
-@Repository("clienteDaoJPA") 
+@Repository //("clienteDaoJPA") 
 public class ClienteDaoImpl implements IClienteDao {
 	
 	@PersistenceContext
 	private EntityManager em;
 	
 	@SuppressWarnings("unchecked")
-	@Transactional(readOnly=true)
 	@Override
 	public List<Cliente> findAll() 
 	{
@@ -31,7 +28,6 @@ public class ClienteDaoImpl implements IClienteDao {
 	 * se trata de un insert (persist)
 	 */
 	@Override
-	@Transactional
 	public void save(Cliente cliente) {
 		if(cliente.getId() != null && cliente.getId() > 0)
 		{
@@ -44,13 +40,11 @@ public class ClienteDaoImpl implements IClienteDao {
 		
 	}
 	
-	@Transactional(readOnly=true)
 	@Override
 	public Cliente findOne(Long id) {
 		return em.find(Cliente.class, id);
 	}
 
-	@Transactional
 	@Override
 	public void delete(Long id) {
 		Cliente cliente = findOne(id);
