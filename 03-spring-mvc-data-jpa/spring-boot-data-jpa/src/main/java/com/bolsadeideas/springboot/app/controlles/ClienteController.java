@@ -20,7 +20,7 @@ import com.bolsadeideas.springboot.app.models.service.IClienteService;
 
 //Configuramos la clase como un controlador
 @Controller
-@SessionAttributes("clientes") //Cada vez que llamamos al metodo guardar o crear. En los atributos de la session se almacenara el objeto cliente
+@SessionAttributes("cliente") //Cada vez que llamamos al metodo guardar o crear. En los atributos de la session se almacenara el objeto cliente
 public class ClienteController {
 	
 	@Autowired //buscamos un componente registrado en el contenedor que implemente la interface IClienteDao
