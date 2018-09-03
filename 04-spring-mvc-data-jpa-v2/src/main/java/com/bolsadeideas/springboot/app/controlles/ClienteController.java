@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.bolsadeideas.springboot.app.models.entity.Cliente;
 import com.bolsadeideas.springboot.app.models.service.IClienteService;
@@ -59,7 +60,7 @@ public class ClienteController {
 	 * BindingResult valida el resultado
 	 */
 	@RequestMapping(value="/form", method = RequestMethod.POST)
-	public String guardar(@Valid Cliente cliente, BindingResult result, Model model, SessionStatus status)
+	public String guardar(@Valid Cliente cliente, BindingResult result, Model model, RedirectAttributes flash ,SessionStatus status)
 	{
 		if(result.hasErrors())
 		{
@@ -67,10 +68,14 @@ public class ClienteController {
 			// si contiene errores retornamos al formulario form
 			return "form";
 		}
+		
+		String mensajeFlash = (cliente.getId() != null ? "Cliente editado con exito" : "Cliente creado con exito");
+		
 		//llamamos a nuestros clase dao
 		clienteService.save(cliente);
 		//Cuando se terminar de realizar la operacion insertar o editar, eliminamos el objeto cliente de la session
 		status.setComplete();
+		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/listar";
 	}
 	
@@ -80,15 +85,21 @@ public class ClienteController {
 	 * @return
 	 */
 	@RequestMapping(value="/form/{id}", method = RequestMethod.GET)
-	public String editar(@PathVariable(value="id")Long id, Map<String, Object> model)
+	public String editar(@PathVariable(value="id")Long id, Map<String, Object> model, RedirectAttributes flash)
 	{
 		Cliente cliente = null;
 		if(id > 0)
 		{
 			cliente = clienteService.findOne(id);
+			if(cliente == null)
+			{
+				flash.addFlashAttribute("error", "No se pudo recuperar el cliente para la edicion");
+				return "redirect:/listar";
+			}
 		}
 		else
 		{
+			flash.addFlashAttribute("error", "El id del cliente no puede ser 0");
 			return "redirect:/listar";
 		}
 		
@@ -99,12 +110,13 @@ public class ClienteController {
 	}
 	
 	@RequestMapping(value="/eliminar/{id}", method = RequestMethod.GET)
-	public String eliminar(@PathVariable(value="id")Long id, Map<String, Object> model)
+	public String eliminar(@PathVariable(value="id")Long id, Map<String, Object> model, RedirectAttributes flash)
 	{
 		Cliente cliente = null;
 		if(id > 0)
 		{
 			clienteService.delete(id);
+			flash.addFlashAttribute("success", "Cliente eliminado con exito");
 		}
 		return "redirect:/listar";
 	}
