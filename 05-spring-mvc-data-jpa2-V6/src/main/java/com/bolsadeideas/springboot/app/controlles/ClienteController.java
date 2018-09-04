@@ -1,5 +1,6 @@
 package com.bolsadeideas.springboot.app.controlles;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -45,13 +46,14 @@ public class ClienteController {
 	//@Qualifier("clienteDaoJPA") //nos aseguramos de injectar la clase correcta que implemente la interface
 	private IClienteService clienteService;
 	
+	private static final String UPLOADS_FOLDER = "uploads";
 	/**
 	 * Metodo para pasar la foto como recurso de manera programatica
 	 */
 	@GetMapping(value="/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename)
 	{
-		Path pathFoto = Paths.get("uploads").resolve(filename).toAbsolutePath();
+		Path pathFoto = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
 		Resource recurso = null;
 		try
 		{
@@ -151,11 +153,28 @@ public class ClienteController {
 		 */
 		if(!foto.isEmpty())
 		{
+			/**
+			 * Si se edita la foto del cliente por una actual, se debe registrar la nueva foto y a su vez
+			 * eliminar la foto antigua en el servidor
+			 */
+			if(cliente.getId() != null && cliente.getId() > 0 && cliente.getFoto() != null && cliente.getFoto().length() > 0)
+			{
+				//obtenemos la ruta absoluta de la foto del cliente
+				Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(cliente.getFoto()).toAbsolutePath();
+				//obtenemos la foto guardada en el servidor
+				File archivo = rootPath.toFile();
+				//validamos
+				if(archivo.exists() && archivo.canRead())
+				{
+					archivo.delete();
+				}
+			}
+			
 			//generamos un nombre unico para la foto subida al servidor
 			String uniqueFileName = UUID.randomUUID().toString() + "_" + foto.getOriginalFilename();
 			//2. Objeto Path donde se almacenaran las fotos
 			// ruta en la raiz del proyecto: (uploads/"file_name")
-			Path rootPath = Paths.get("uploads").resolve(uniqueFileName); 
+			Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFileName); 
 			//obtenemos la ruta absoluta desde C:// en adelante
 			Path rootAbsolutPath = rootPath.toAbsolutePath();
 			
@@ -227,8 +246,25 @@ public class ClienteController {
 		Cliente cliente = null;
 		if(id > 0)
 		{
+			//Cuando se elimina el cliente de la BD tambien se debe eliminar su foto en el servidor
+			cliente = clienteService.findOne(id);
+			
 			clienteService.delete(id);
 			flash.addFlashAttribute("success", "Cliente eliminado con exito");
+			
+			//obtenemos la ruta absoluta de la foto del cliente
+			Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(cliente.getFoto()).toAbsolutePath();
+			//obtenemos la foto guardada en el servidor
+			File archivo = rootPath.toFile();
+			//validamos
+			if(archivo.exists() && archivo.canRead())
+			{
+				//metodo delete de la clase File retorna un booleano
+				if(archivo.delete())
+				{
+					flash.addFlashAttribute("info", "Foto " + cliente.getFoto() + " eliminada");
+				}
+			}
 		}
 		return "redirect:/listar";
 	}
