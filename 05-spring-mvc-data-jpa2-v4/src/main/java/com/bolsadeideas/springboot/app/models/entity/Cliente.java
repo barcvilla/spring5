@@ -46,6 +46,8 @@ public class Cliente implements Serializable {
 	@NotNull
 	private Date createdAt;
 	
+	private String foto;
+	
 	public Cliente() {}
 	
 	/**
@@ -100,6 +102,14 @@ public class Cliente implements Serializable {
 		this.createdAt = created;
 	}
 	
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 	@Override
 	public String toString()
 	{
