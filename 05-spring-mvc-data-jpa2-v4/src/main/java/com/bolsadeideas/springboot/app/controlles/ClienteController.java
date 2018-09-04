@@ -120,8 +120,9 @@ public class ClienteController {
 		if(!foto.isEmpty())
 		{
 			//2. Objeto Path donde se almacenaran las fotos
-			Path directorioResources = Paths.get("src//main//resources//static//uploads");
-			String rootPath = directorioResources.toFile().getAbsolutePath();
+			String rootPath = "C://temp//uploads";
+			//Path directorioResources = Paths.get("src//main//resources//static//uploads");
+			//String rootPath = directorioResources.toFile().getAbsolutePath();
 			//3. procesamos el contendio
 			try 
 			{
