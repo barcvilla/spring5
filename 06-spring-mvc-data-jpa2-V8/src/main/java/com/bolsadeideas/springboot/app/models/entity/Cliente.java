@@ -1,13 +1,18 @@
 package com.bolsadeideas.springboot.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -46,9 +51,22 @@ public class Cliente implements Serializable {
 	@NotNull
 	private Date createdAt;
 	
+	/**
+	 * El atributo facturas permite la relacion entre Factura y Cliente
+	 * @OneToMany : Un Cliente tiene muchas Facturas
+	 * mappedBy : Indicamos cual es el atributo en la otra clase relacionada. La clase Factura tiene un atributo cliente.
+	 * 			  mappedBy logra una relacion bi-direccional : Cliente tendra una lista de Faturas y Factura tendra 
+	 *  		  un Cliente. De forma automatica creara en Factura la llave foranea cliente_id
+	 */
+	@OneToMany(mappedBy="cliente" ,fetch=FetchType.LAZY, cascade= CascadeType.ALL)
+	List<Factura> facturas;
+	
 	private String foto;
 	
-	public Cliente() {}
+	public Cliente() {
+		// inicializamos el array list para facturas
+		facturas = new ArrayList<Factura>();
+	}
 	
 	/**
 	 * Este metodo se invoca automaticamente antes de producirse la persistencia del cliente en la BD
@@ -108,6 +126,21 @@ public class Cliente implements Serializable {
 
 	public void setFoto(String foto) {
 		this.foto = foto;
+	}
+	
+	public void setFacturas(List<Factura> facturas)
+	{
+		this.facturas = facturas;
+	}
+	
+	public List<Factura> getFacturas()
+	{
+		return facturas;
+	}
+	
+	public void addFactura(Factura factura)
+	{
+		facturas.add(factura);
 	}
 
 	@Override

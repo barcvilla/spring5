@@ -18,6 +18,29 @@
 					<li class="list-group-item" th:text="${cliente.email}"></li>
 					<li class="list-group-item" th:text="${cliente.createdAt}"></li>
 				</ul>
+				<!-- Mostramos el mesaje si el cliente no tiene facturas -->
+				<div th:if="${#lists.isEmpty(cliente.facturas)}" class="alert alert-info my-4" th:text="'No hay facturas asignadas para el cliente ' + 
+				${cliente.nombre} + ' ' + ${cliente.apellido}"></div>
+				<!-- Mostramos la tabla si la lista de facturas NO ESTA VACIA -->
+				<table th:if="${not #lists.isEmpty(cliente.facturas)}" class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Factura</th>
+							<th>Descripcion</th>
+							<th>Fecha</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- aqui se invoca el metodo getFacturas automaticamente de la clase Cliente (Lazy Fetch) -->
+						<tr th:each="factura: ${cliente.facturas}"> 
+							<td th:text="${factura.id}"></td>
+							<td th:text="${factura.descripcion}"></td>
+							<td th:text="${factura.createAt}"></td>
+							<td th:text="${factura.total}"></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
