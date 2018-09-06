@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<script type="text/javascript" th:fragment="javascript">
+	
+	<!-- Implementacion del AutoComplete Utilizando Jquery Interface la cual provee todo los elementos de 
+		interface de usuario como el autocomplete -->
+		
+	<!-- 1. Nos aseguramos que el documento html haya sido completamente cargado a traves del metodo ready() -->
+		${document}.ready(function(){
+			<!--Implementamos el metodo autocomplete. Asociamos el autocomplete con el campo id="buscar_producto" -->
+			<!--Hacemos referencia al id del campo buscar_producto e invocamos al metodo autocomplete(). Este metodo
+			    autocomplete() recibe un objeto con el metodo source:que realiza la peticion ajax. 
+			     metodo select() procesa el resultado y hace algo con los datos -->
+			    
+			${"#buscar_producto"}.autocomplete({
+				source: function(request, response){
+					<!--implementacion ajax-->
+					$.ajax({
+						<!--Pasamos un objeto con todos los parametros y la implementacion del metodo success-->
+						<!--Mapping url hacia un metodo handler del controlador que se encarga de manejar la peticion ajax
+						    y realiza la consulta para retornar los productos retornados para ello cobcatenamos el
+						    input del usaurio que se obtiene mediante request.term-->
+						url: "/factura/cargar-productos/" + request.term;
+						dataType: "json",
+						data: {
+							term: request.term
+						},
+						<!--metodo que recibe los datos-->
+						success: function(data){
+							<!--Preparamos la respuesta. Invocamos el metodo Map que realiza un proceso por cada elemento del arreglo-->
+							<!--Incluimos una funcion anonima. Por cada item del parametro data retornara el id, nombre, precio del producto-->
+							response($.map(data, function(item){
+								return {
+									value: item.id,
+									label: item.nombre,
+									precio: item.precio,
+								};
+							}));
+						},
+					});
+				},
+				<!--Con el metodo select podemos realizar cualquier tarea con el elemento seleccionado. Por ejemplo
+				    Tomamos el producto seleccionado y creamos la linea de factura a traves de una tabla dinamica-->
+				select: function(event, ui){
+					${"#buscar_producto"}.val(ui.item.label);
+					return false;
+				}
+			});
+		});
+	</script>
+</body>
+</html>
