@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bolsadeideas.springboot.app.models.dao.IClienteDao;
+import com.bolsadeideas.springboot.app.models.dao.IProductoDao;
 import com.bolsadeideas.springboot.app.models.entity.Cliente;
+import com.bolsadeideas.springboot.app.models.entity.Producto;
 
 /**
- * ClienteServiceImpl: representa la case Facade que es el unico punto de acceso para una clase DAO
+ * ClienteServiceImpl: representa la clase Facade que es el unico punto de acceso para una clase DAO
  * @author PC
  *
  */
@@ -22,6 +24,9 @@ public class ClienteServiceImpl implements IClienteService {
 	//Inyectamos el DAO
 	@Autowired
 	IClienteDao clienteDao;
+	
+	@Autowired
+	IProductoDao productoDao;
 	
 	@Transactional(readOnly=true)
 	@Override
@@ -50,11 +55,19 @@ public class ClienteServiceImpl implements IClienteService {
 		
 		clienteDao.delete(id);
 	}
-
+	
+	@Transactional(readOnly=true)
 	@Override
 	public Page<Cliente> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return clienteDao.findAll(pageable);
 	}
 
+	@Override
+	public List<Producto> findByNombre(String term) {
+		// TODO Auto-generated method stub
+		//return productoDao.findByNombre(term);
+		return productoDao.findByNombreLikeIgnoreCase("%" + term + "%");
+	}
+	
 }
