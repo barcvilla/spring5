@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Plantilla que muestra todos los productos coincidentes con el producto ingresado por el usuario.
+     La clase bootstras d-none hace invisible el listado de productos-->
+	
+	<table th:fragment="itemsFactura" class="d-none">
+		<tbody id="plantillaItemsFactura">
+			<tr id="row_{ID}">
+				<td class="d-none"><input type="hidden" value="{ID}" name="item_id[]" /></td>
+				<td>{NOMBRE}</td>
+				<td>{PRECIO}</td>
+				<td><input type="number" value="1" name="cantidad[]" id="cantidad_{ID}" class="form-control col-sm-4" /></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
