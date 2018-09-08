@@ -24,7 +24,10 @@
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label" th:text="'Descripcion: '"></label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{descripcion}" class="form-control" />
+							<input type="text" th:field="*{descripcion}" class="form-control"
+							th:errorclass="'form-control is-invalid'" />
+							<!-- adicionamos el mensaje de erro si la descripcion es empty -->
+							<div class="invalid-feedback" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
 						</div>
 					</div>
 					
@@ -55,11 +58,17 @@
 								<th>Nombre</th>
 								<th>Precio</th>
 								<th>Cantidad</th>
+								<th>Total</th>
+								<th>Eliminar</th>
 							</tr>
 						</thead>
+						<!-- Detalle de la factura -->
 						<tbody>
 						</tbody>
 					</table>
+					
+					<!-- Gran Total -->
+					<h5>Total: <span class="badge badge-secondary" id="gran_total">0</span></h5>
 					
 					<div class="form-group row">
 						<div class="col-sm-6">

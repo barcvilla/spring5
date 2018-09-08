@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bolsadeideas.springboot.app.models.dao.IClienteDao;
+import com.bolsadeideas.springboot.app.models.dao.IFacturaDao;
 import com.bolsadeideas.springboot.app.models.dao.IProductoDao;
 import com.bolsadeideas.springboot.app.models.entity.Cliente;
+import com.bolsadeideas.springboot.app.models.entity.Factura;
 import com.bolsadeideas.springboot.app.models.entity.Producto;
 
 /**
@@ -23,10 +25,13 @@ public class ClienteServiceImpl implements IClienteService {
 	
 	//Inyectamos el DAO
 	@Autowired
-	IClienteDao clienteDao;
+	private IClienteDao clienteDao;
 	
 	@Autowired
-	IProductoDao productoDao;
+	private IProductoDao productoDao;
+	
+	@Autowired
+	private IFacturaDao facturaDao;
 	
 	@Transactional(readOnly=true)
 	@Override
@@ -68,6 +73,18 @@ public class ClienteServiceImpl implements IClienteService {
 		// TODO Auto-generated method stub
 		//return productoDao.findByNombre(term);
 		return productoDao.findByNombreLikeIgnoreCase("%" + term + "%");
+	}
+
+	@Override
+	@Transactional
+	public void saveFactura(Factura factura) {
+		facturaDao.save(factura);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Producto findProductoById(Long id) {
+		return productoDao.findOne(id);
 	}
 	
 }
