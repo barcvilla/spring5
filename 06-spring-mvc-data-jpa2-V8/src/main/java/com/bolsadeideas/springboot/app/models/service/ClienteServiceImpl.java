@@ -69,6 +69,7 @@ public class ClienteServiceImpl implements IClienteService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Producto> findByNombre(String term) {
 		// TODO Auto-generated method stub
 		//return productoDao.findByNombre(term);
@@ -85,6 +86,13 @@ public class ClienteServiceImpl implements IClienteService {
 	@Transactional(readOnly = true)
 	public Producto findProductoById(Long id) {
 		return productoDao.findOne(id);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Factura findFacturaById(Long id) {
+		// TODO Auto-generated method stub
+		return facturaDao.findOne(id);
 	}
 	
 }
