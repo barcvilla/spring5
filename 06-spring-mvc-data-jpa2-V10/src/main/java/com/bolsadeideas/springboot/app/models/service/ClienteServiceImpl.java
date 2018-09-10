@@ -47,11 +47,17 @@ public class ClienteServiceImpl implements IClienteService {
 		clienteDao.save(cliente);
 	}
 	
+	/**
+	 * Cambios para la version 2.0.4 Spring Boot y Spring Framework 5
+	 * En Spring Boot 2.0.4 la interface CrudRepository cambia el nombre del metodo findOne por findById y deleteById
+	 * Retorna un objeto Optional<T> esta clase en Java 8 permite establece un resultado opticional si no se recibe un objeto
+	 * asi se evita el error nullpointerexception
+	 */
 	@Transactional(readOnly=true)
 	@Override
 	public Cliente findOne(Long id) {
 		
-		return clienteDao.findOne(id);
+		return clienteDao.findById(id).orElse(null);
 	}
 	
 	@Override
@@ -64,7 +70,7 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	public void delete(Long id) {
 		
-		clienteDao.delete(id);
+		clienteDao.deleteById(id);
 	}
 	
 	@Transactional(readOnly=true)
@@ -91,20 +97,20 @@ public class ClienteServiceImpl implements IClienteService {
 	@Override
 	@Transactional(readOnly = true)
 	public Producto findProductoById(Long id) {
-		return productoDao.findOne(id);
+		return productoDao.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Factura findFacturaById(Long id) {
 		// TODO Auto-generated method stub
-		return facturaDao.findOne(id);
+		return facturaDao.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
 	public void deleteFactura(Long id) {
-		facturaDao.delete(id);
+		facturaDao.deleteById(id);
 	}
 
 	@Override

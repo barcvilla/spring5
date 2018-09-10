@@ -92,7 +92,7 @@ public class ClienteController {
 		 * (@RequestParam) es una param GET size : cantidad de elementos por pagina a
 		 * mostrar
 		 */
-		Pageable pageRequest = new PageRequest(page, 6);
+		Pageable pageRequest = PageRequest.of(page, 6);
 
 		Page<Cliente> clientes = clienteService.findAll(pageRequest);
 
