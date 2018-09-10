@@ -54,6 +54,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findOne(id);
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public Cliente fetchByIdWithFacturas(Long id) {
+		return clienteDao.fetchByIdWithFacturas(id);
+	}
+	
 	@Transactional
 	@Override
 	public void delete(Long id) {
@@ -100,5 +106,12 @@ public class ClienteServiceImpl implements IClienteService {
 	public void deleteFactura(Long id) {
 		facturaDao.delete(id);
 	}
-	
+
+	@Override
+	@Transactional(readOnly = true)
+	public Factura fecthByIdWithClienteWithItemFacturaWithProducto(Long id) {
+		
+		return facturaDao.fecthByIdWithClienteWithItemFacturaWithProducto(id);
+	}
+
 }
