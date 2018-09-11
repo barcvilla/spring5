@@ -84,8 +84,9 @@ public class ClienteController {
 
 		return "ver";
 	}
-
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
+	
+	//Tanto / como /listar seran las paginas de inicio
+	@RequestMapping(value = {"/listar", "/"}, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		/**
 		 * page : numero de paginas actual. Esta variable se pasa por la URL
