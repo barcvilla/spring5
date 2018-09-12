@@ -28,7 +28,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 			.formLogin().loginPage("/login")
 			.permitAll()
 		.and()
-			.logout(); //recursos privados
+			.logout()
+		.and()
+		.exceptionHandling().accessDeniedPage("/error_403"); //recursos privados
 	}
 	
 	//Implementamos el metodo que nos permite crear usuarios en memoria

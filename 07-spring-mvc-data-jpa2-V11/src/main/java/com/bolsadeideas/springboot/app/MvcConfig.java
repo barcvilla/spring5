@@ -1,6 +1,7 @@
 package com.bolsadeideas.springboot.app;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -23,5 +24,15 @@ public class MvcConfig implements WebMvcConfigurer {
 		.addResourceLocations("resourcePath");
 	}
 	*/
+	
+	/**
+	 * Implementacion de un controlador Parametrizable ViewController que carge la vista
+	 * Metodo que registra el controlador de vista
+	 */
+	public void addViewControllers(ViewControllerRegistry registry)
+	{
+		registry.addViewController("/error_403").setViewName("error_403");;
+	}
+	
 	
 }
