@@ -3,9 +3,14 @@ package com.bolsadeideas.springboot.app.controlles;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.validation.Valid;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -13,6 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,11 +40,15 @@ import com.bolsadeideas.springboot.app.models.service.IClienteService;
 import com.bolsadeideas.springboot.app.models.service.IUploadService;
 import com.bolsadeideas.springboot.app.util.paginator.PageRender;
 
+import ch.qos.logback.classic.Level;
+
 //Configuramos la clase como un controlador
 @Controller
 @SessionAttributes("cliente") // Cada vez que llamamos al metodo guardar o crear. En los atributos de la
 								// session se almacenara el objeto cliente
 public class ClienteController {
+	
+	protected final Log logger = LogFactory.getLog(this.getClass());
 
 	@Autowired // buscamos un componente registrado en el contenedor que implemente la
 				// interface IClienteDao
@@ -87,7 +100,32 @@ public class ClienteController {
 	
 	//Tanto / como /listar seran las paginas de inicio
 	@RequestMapping(value = {"/listar", "/"}, method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, Authentication authentication) {
+		
+		if(authentication != null)
+		{
+			logger.info("Hola usuario autenticado, tu user name es: " + authentication.getName());
+		}
+		
+		/**
+		 * Utilizando de forma static SecurityContextHolder
+		 */
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth != null)
+		{
+			logger.info("Utilizando forma static SecurityContextHolder.getContext().getAuthentication(): Usuario autenticado, username es: ".concat(auth.getName()));
+		}
+		
+		if(hasRole("ROLE_ADMIN"))
+		{
+			logger.info("Hola ".concat(auth.getName()).concat(" tienes acceso"));
+		}
+		else
+		{
+			logger.info("Hola ".concat(auth.getName()).concat(" no tienes acceso"));
+		}
+		
+		
 		/**
 		 * page : numero de paginas actual. Esta variable se pasa por la URL
 		 * (@RequestParam) es una param GET size : cantidad de elementos por pagina a
@@ -226,5 +264,41 @@ public class ClienteController {
 
 		}
 		return "redirect:/listar";
+	}
+	
+	/**
+	 * Validamos si el usuario tiene el rol correcto
+	 */
+	private boolean hasRole(String role)
+	{
+		SecurityContext context = SecurityContextHolder.getContext();
+		//validamos el context
+		if(context == null)
+		{
+			return false;
+		}
+		
+		Authentication auth = context.getAuthentication();
+		//validamos el authentication
+		if(auth == null)
+		{
+			return false;
+		}
+		
+		/**
+		 * Por medio de auth obtenemos una coleccion de roles
+		 * Coleccion de cualquier objeto que implemente la interface GrantedAuthority
+		 * Cualquier clae Role o que representa un Role en nuestra app tiene que implementar esta interface
+		 */
+		Collection<? extends GrantedAuthority> authorities =  auth.getAuthorities();
+		for(GrantedAuthority authority : authorities)
+		{
+			if(role.equals(authority.getAuthority()))
+			{
+				logger.info("Hola usuario ".concat(auth.getName()).concat(" tu rol es: ".concat(authority.getAuthority())));
+				return true;
+			}
+		}
+		return false;
 	}
 }
