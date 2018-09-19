@@ -7,7 +7,7 @@ import { ClienteService } from './cliente.service';
   templateUrl: './clientes.component.html'
 })
 export class ClientesComponent implements OnInit {
-  clientes: Cliente[];
+  private clientes: Cliente[];
   private clienteService: ClienteService;
 
   constructor(clienteService: ClienteService) {
@@ -15,8 +15,14 @@ export class ClientesComponent implements OnInit {
   }
 
   ngOnInit() {
-    //iniciamos la variable array clientes son la constante exportada ClientesComponent
-    this.clientes = this.clienteService.getClientes();
+    //registramos el observador al cliente para que escuche las modificaciones
+    this.clienteService.getClientes().subscribe(
+    //funcion anonima donde declaramos nuestro observador. Pasamos el array de clientes y lo asignamos a la variable de instancia
+    (clientes) =>
+    {
+      this.clientes = clientes
+    }
+  );
   }
 
 }
