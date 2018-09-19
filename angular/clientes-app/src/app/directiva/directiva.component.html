@@ -1,3 +1,10 @@
-<p>
-  directiva works!
-</p>
+<button type="button" (click)="setHabilitar()" class="btn btn-primary my-3">{{habilitar==true ? 'Ocultar' : 'Mostrar'}}</button>
+<div class="card">
+  <div class="card-header">
+    Listado de Cursos
+  </div>
+  <ul class="list-group" *ngIf="habilitar == true">
+    <!--Iteramos la lista mediante la directiva ngFor de Angular-->
+    <li class="list-group-item" *ngFor="let curso of listaCurso">{{curso}}</li>
+  </ul>
+</div>
