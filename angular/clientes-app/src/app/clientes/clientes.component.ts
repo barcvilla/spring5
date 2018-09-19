@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente'; //importamos la clase Cliente
+import { ClienteService } from './cliente.service';
 
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html'
 })
 export class ClientesComponent implements OnInit {
-  /*Creamos objetos cliente con formato JSon*/
-  clientes: Cliente[] = [
-    {id: 1, nombre: 'Andres', apellido: 'Guzman', email: 'a.guzman@gmail.com', createAt: '2017-12-11'},
-    {id: 2, nombre: 'Carlos', apellido: 'Villanueva', email: 'barcvilla@gmail.com', createAt: '2018-09-19'}
-  ];
+  clientes: Cliente[];
+  private clienteService: ClienteService;
 
-  constructor() { }
+  constructor(clienteService: ClienteService) {
+    this.clienteService = clienteService;
+  }
 
   ngOnInit() {
+    //iniciamos la variable array clientes son la constante exportada ClientesComponent
+    this.clientes = this.clienteService.getClientes();
   }
 
 }

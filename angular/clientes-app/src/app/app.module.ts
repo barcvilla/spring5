@@ -7,10 +7,10 @@ import { AppComponent } from './app.component';
 
 /*Importamos nuestro HeaderComponent*/
 import { HeaderComponent } from './header/header.component';
-
 import { FooterComponent } from './footer/footer.component';
 import { DirectivaComponent } from './directiva/directiva.component';
 import { ClientesComponent } from './clientes/clientes.component';
+import { ClienteService } from './clientes/cliente.service'; /*Importamos nuestra clase cliente.service*/
 
 @NgModule({
   /*Declaramos nuestros components*/
@@ -25,7 +25,7 @@ import { ClientesComponent } from './clientes/clientes.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [ClienteService],
   /*component principal que despliega la aplicacion*/
   bootstrap: [AppComponent]
 })
