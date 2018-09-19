@@ -10,6 +10,7 @@ import { HeaderComponent } from './header/header.component';
 
 import { FooterComponent } from './footer/footer.component';
 import { DirectivaComponent } from './directiva/directiva.component';
+import { ClientesComponent } from './clientes/clientes.component';
 
 @NgModule({
   /*Declaramos nuestros components*/
@@ -17,7 +18,8 @@ import { DirectivaComponent } from './directiva/directiva.component';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    DirectivaComponent
+    DirectivaComponent,
+    ClientesComponent
   ],
   /*importamos modulos a utilizar: form, httpRequest, Rest, etc*/
   imports: [
