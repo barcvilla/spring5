@@ -5,14 +5,19 @@ import { CLIENTES } from './clientes.json'; //importamos la constante que se exp
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
 import { Observable, of } from 'rxjs'; //extensiones reactive (reactive extension)
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 //injectable marca la clase como una clase de servicio
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
+  //definimos nuestro EndPoint (url)
+  private urlEndPoint: string = "http://localhost:8080/api/clientes"; //apuntamos servidor Spring
 
-  constructor() { }
+  //definimos una variable http de clase en el constructor e inyectamos la dependencia HttpClient
+  constructor(private http: HttpClient) { }
 
   /**
   * Convertimos al metodo getClientes() en un metodo asincrono, que no bloque la app mientras espera la respuesta
@@ -21,11 +26,24 @@ export class ClienteService {
   * escuchando cualquier cambio en el sujeto observado, esto observadores se suscriben al sujeto y cuando cambia su estado
   * se notifica a los observadores y se dispara algun tipo de proceso o accion.
   * Este patron aplicado a Angular: En el backed tenemos un API REST y en el Front-end el cliente con Angular, asi
-  * cuando se produce un cambio en el back-end se actulice en el cliente sin necesidad de recargar la pagina 
+  * cuando se produce un cambio en el back-end se actulice en el cliente sin necesidad de recargar la pagina
   */
   getClientes():Observable<Cliente[]>
   {
     /*convertimos al arreglo de clientes en un Observable*/
-     return of(CLIENTES);
+     //return of(CLIENTES);
+
+     /**
+     * El servidor nos envia una respuesta de tipo JSon, por lo que se debe hacer un Cast al tipo Cliente
+     */
+     //return this.http.get<Cliente[]>(this.urlEndPoint);
+
+     // Otra forma es aplicar un map que nos permite convetir una respuesta Json a un tipo Cliente
+     return this.http.get(this.urlEndPoint).pipe(
+       //map(response => response as Cliente[]) usando clousure pero tambien podemos usar la manera antigua de function
+       map(function(response) {
+           return response as Cliente[];
+       })
+     );
   }
 }

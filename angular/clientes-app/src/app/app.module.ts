@@ -14,6 +14,9 @@ import { ClienteService } from './clientes/cliente.service'; /*Importamos nuestr
 
 import { RouterModule, Routes } from '@angular/router';
 
+//importamos el module que permite la conexion http con el servidor
+import { HttpClientModule } from '@angular/common/http';
+
 //declaramos la constante que maneja nuestras rutas (url)
 const routes: Routes = [
   {path: '', redirectTo: '/clientes', pathMatch: 'full'},
@@ -33,6 +36,7 @@ const routes: Routes = [
   /*importamos modulos a utilizar: form, httpRequest, Rest, etc*/
   imports: [
     BrowserModule,
+    HttpClientModule,
     RouterModule.forRoot(routes)
   ],
   providers: [ClienteService],
