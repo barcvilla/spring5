@@ -2,6 +2,12 @@
   <div class="card-header">Clientes</div>
   <div class="card-body text-primary">
     <h5 class="card-title">Listado de Clientes</h5>
+
+    <div class="my-2 text-left">
+      <!--routerLink permite crear enlaces a las rutas definidas en el app.module Routes-->
+      <button type="button" class="btn btn-rounded btn-primary" [routerLink]="['/clientes/form']">Crear Cliente</button>
+    </div>
+
     <table class="table table-bordered table-striped">
       <thead>
         <tr>

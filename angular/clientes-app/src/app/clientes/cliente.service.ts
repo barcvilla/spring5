@@ -5,7 +5,7 @@ import { CLIENTES } from './clientes.json'; //importamos la constante que se exp
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
 import { Observable, of } from 'rxjs'; //extensiones reactive (reactive extension)
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 //injectable marca la clase como una clase de servicio
@@ -15,6 +15,9 @@ import { map } from 'rxjs/operators';
 export class ClienteService {
   //definimos nuestro EndPoint (url)
   private urlEndPoint: string = "http://localhost:8080/api/clientes"; //apuntamos servidor Spring
+
+  //definimos la cabecera
+  private httpHeaders = new HttpHeaders({'Content-type':'application/json'});
 
   //definimos una variable http de clase en el constructor e inyectamos la dependencia HttpClient
   constructor(private http: HttpClient) { }
@@ -45,5 +48,15 @@ export class ClienteService {
            return response as Cliente[];
        })
      );
+  }
+
+  /**
+  * Metodo create() que recibe el cliente Json. Retorna un tipo Observable Cliente que es el cliente creado para ser
+  * almacenado en la BD
+  * Pasamos la URL, el objeto cliente y el headers
+  */
+  create(cliente: Cliente): Observable<Cliente>
+  {
+    return this.http.post<Cliente>(this.urlEndPoint, cliente, {headers: this.httpHeaders});
   }
 }
