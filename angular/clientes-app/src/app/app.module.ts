@@ -22,7 +22,8 @@ const routes: Routes = [
   {path: '', redirectTo: '/clientes', pathMatch: 'full'},
   {path: 'directivas', component: DirectivaComponent},
   {path: 'clientes', component: ClientesComponent},
-  {path: 'clientes/form', component: FormComponent}
+  {path: 'clientes/form', component: FormComponent}, // ruta que llama al formulario de insertar cliente
+  {path: 'clientes/form/:id', component: FormComponent} // ruta para obtener un cliente
 ];
 
 @NgModule({
